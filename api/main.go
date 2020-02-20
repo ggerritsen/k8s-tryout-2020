@@ -17,19 +17,8 @@ var customerSvcClient pb.CustomerServiceClient
 func main() {
 	log.Printf("Starting api...")
 
-	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-	greetSvcClient = pb.NewGreetServiceClient(conn)
-
-	conn2, err := grpc.Dial("localhost:8082", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn2.Close()
-	customerSvcClient = pb.NewCustomerServiceClient(conn2)
+	greetSvcClient = pb.NewGreetServiceClient(dial("localhost:8081"))
+	customerSvcClient = pb.NewCustomerServiceClient(dial("localhost:8082"))
 
 	http.HandleFunc("/hello", sayHello)
 	if err := http.ListenAndServe(":8080", http.DefaultServeMux); err != nil {
@@ -37,6 +26,14 @@ func main() {
 	}
 
 	log.Printf("Stopped api.")
+}
+
+func dial(hostPort string) grpc.ClientConnInterface {
+	conn, err := grpc.Dial(hostPort, grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+	return conn
 }
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
