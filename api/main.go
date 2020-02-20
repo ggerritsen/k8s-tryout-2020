@@ -12,6 +12,7 @@ import (
 )
 
 var greetSvcClient pb.GreetServiceClient
+var customerSvcClient pb.CustomerServiceClient
 
 func main() {
 	log.Printf("Starting api...")
@@ -23,6 +24,13 @@ func main() {
 	defer conn.Close()
 	greetSvcClient = pb.NewGreetServiceClient(conn)
 
+	conn2, err := grpc.Dial("localhost:8082", grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn2.Close()
+	customerSvcClient = pb.NewCustomerServiceClient(conn2)
+
 	http.HandleFunc("/hello", sayHello)
 	if err := http.ListenAndServe(":8080", http.DefaultServeMux); err != nil {
 		log.Fatal(err)
@@ -32,13 +40,19 @@ func main() {
 }
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
-	resp, err := greetSvcClient.Greet(context.Background(), &pb.GreetRequest{})
+	greeting, err := greetSvcClient.Greet(context.Background(), &pb.GreetRequest{})
 	if err != nil {
 		log.Printf("Error encountered: %v", err)
 		fmt.Fprintf(w, "Error encountered: %v", err)
 		return
 	}
 
-	// NEXT: get name from customer service
-	fmt.Fprintf(w, resp.Message)
+	c, err := customerSvcClient.GetCustomer(context.Background(), &pb.GetCustomerRequest{})
+	if err != nil {
+		log.Printf("Error encountered: %v", err)
+		fmt.Fprintf(w, "Error encountered: %v", err)
+		return
+	}
+
+	fmt.Fprintf(w, "<h1>%s, %s %s (id: %d)</h1>", greeting.Message, c.Customer.FirstName, c.Customer.LastName, c.Customer.Id)
 }

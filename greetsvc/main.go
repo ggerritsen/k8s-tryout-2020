@@ -38,7 +38,7 @@ type server struct {
 var greetings = []string{"Sayonara", "Hello", "Bonjour", "Hallo", "Guten Tag"}
 
 func (s *server) Greet(ctx context.Context, in *pb.GreetRequest) (*pb.GreetResponse, error) {
-	log.Printf("Got greetRequest")
+	log.Printf("Got greetRequest: %v", in)
 	gr := greetings[rand.Int() % len(greetings)]
 	return &pb.GreetResponse{Message: gr}, nil
 }
