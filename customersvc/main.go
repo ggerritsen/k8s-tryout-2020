@@ -8,7 +8,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "../proto"
+	pb "github.com/ggerritsen/k8s-tryout-2020/proto"
 )
 
 func main() {
