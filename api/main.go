@@ -15,7 +15,7 @@ var greetSvcClient pb.GreetServiceClient
 var customerSvcClient pb.CustomerServiceClient
 
 func main() {
-	log.Printf("Starting api...")
+	log.Printf("Starting api on http://localhost:8080/...")
 
 	greetSvcClient = pb.NewGreetServiceClient(dial("localhost:8081"))
 	customerSvcClient = pb.NewCustomerServiceClient(dial("localhost:8082"))
