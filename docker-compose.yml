@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        project: ./api/
+        APP_NAME: api
+    environment:
+      - PORT=8080
+    ports:
+      - 8080:8080
+    networks:
+      - monorepo_net
+  customersvc:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        project: ./customersvc/
+        APP_NAME: customersvc
+    environment:
+      - PORT=8082
+    ports:
+      - 8082:8082
+    networks:
+      - monorepo_net
+  greetsvc:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        project: ./greetsvc/
+        APP_NAME: greetsvc
+    environment:
+      - PORT=8081
+    ports:
+      - 8081:8081
+    networks:
+      - monorepo_net
+
+networks:
+  monorepo_net:
+    driver: bridge
