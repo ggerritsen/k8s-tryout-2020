@@ -1,47 +1,42 @@
 version: '3.7'
 
+x-base: &base
+  build:
+    context: ./
+    dockerfile: ./Dockerfile
+  entrypoint: modd
+  command: -f modd.conf
+  networks:
+    - k8s-tryout_net
+  volumes:
+    - ./:/go/app
+
 services:
   api:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-      args:
-        project: ./api/
-        APP_NAME: api
+    <<: *base
+    working_dir: /go/app/api/
     environment:
       - PORT=8080
       - GREETSVC_HOST=greetsvc
       - CUSTOMERSVC_HOST=customersvc
     ports:
       - 8080:8080
-    networks:
-      - k8s-tryout_net
+
   customersvc:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-      args:
-        project: ./customersvc/
-        APP_NAME: customersvc
+    <<: *base
+    working_dir: /go/app/customersvc/
     environment:
       - PORT=8082
     ports:
       - 8082:8082
-    networks:
-      - k8s-tryout_net
+
   greetsvc:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-      args:
-        project: ./greetsvc/
-        APP_NAME: greetsvc
+    <<: *base
+    working_dir: /go/app/greetsvc/
     environment:
       - PORT=8081
     ports:
       - 8081:8081
-    networks:
-      - k8s-tryout_net
 
 networks:
   k8s-tryout_net:

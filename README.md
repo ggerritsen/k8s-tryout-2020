@@ -8,9 +8,8 @@
 
 #### Next steps
 
-- Dockerize
+- Find a way to get rid of multiple modd.confs
 - Run on k8s
-- Add hot reloading via http://github.com/cortesi/modd?
 
 ##### Sources
 - [Docker compose docs](https://docs.docker.com/compose/compose-file/)
