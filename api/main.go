@@ -17,8 +17,8 @@ var customerSvcClient pb.CustomerServiceClient
 func main() {
 	log.Printf("Starting api on http://localhost:8080/...")
 
-	greetSvcClient = pb.NewGreetServiceClient(dial("localhost:8081"))
-	customerSvcClient = pb.NewCustomerServiceClient(dial("localhost:8082"))
+	greetSvcClient = pb.NewGreetServiceClient(dial("greetsvc:8081"))
+	customerSvcClient = pb.NewCustomerServiceClient(dial("customersvc:8082"))
 
 	http.HandleFunc("/hello", sayHello)
 	if err := http.ListenAndServe(":8080", http.DefaultServeMux); err != nil {
