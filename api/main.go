@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"google.golang.org/grpc"
 
@@ -17,8 +18,18 @@ var customerSvcClient pb.CustomerServiceClient
 func main() {
 	log.Printf("Starting api on http://localhost:8080/...")
 
-	greetSvcClient = pb.NewGreetServiceClient(dial("greetsvc:8081"))
-	customerSvcClient = pb.NewCustomerServiceClient(dial("customersvc:8082"))
+	greetSvcHost := "localhost"
+	if v := os.Getenv("GREETSVC_HOST"); v != "" {
+		greetSvcHost = v
+	}
+
+	customerSvcHost := "localhost"
+	if v := os.Getenv("CUSTOMERSVC_HOST"); v != "" {
+		customerSvcHost = v
+	}
+
+	greetSvcClient = pb.NewGreetServiceClient(dial(greetSvcHost + ":8081"))
+	customerSvcClient = pb.NewCustomerServiceClient(dial(customerSvcHost + ":8082"))
 
 	http.HandleFunc("/hello", sayHello)
 	if err := http.ListenAndServe(":8080", http.DefaultServeMux); err != nil {

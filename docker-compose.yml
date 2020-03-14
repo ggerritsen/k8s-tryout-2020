@@ -10,6 +10,8 @@ services:
         APP_NAME: api
     environment:
       - PORT=8080
+      - GREETSVC_HOST=greetsvc
+      - CUSTOMERSVC_HOST=customersvc
     ports:
       - 8080:8080
     networks:
