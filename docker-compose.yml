@@ -5,7 +5,7 @@ x-base: &base
     context: ./
     dockerfile: ./Dockerfile
   entrypoint: modd
-  command: -f modd.conf
+  command: -f ../modd.conf
   networks:
     - k8s-tryout_net
   volumes:

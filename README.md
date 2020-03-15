@@ -8,7 +8,6 @@
 
 #### Next steps
 
-- Find a way to get rid of multiple modd.confs
 - Run on k8s
 
 ##### Sources
