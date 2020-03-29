@@ -18,21 +18,26 @@ var customerSvcClient pb.CustomerServiceClient
 func main() {
 	log.Printf("Starting api on http://localhost:8080/...")
 
-	greetSvcHost := "localhost"
-	if v := os.Getenv("GREETSVC_HOST"); v != "" {
-		greetSvcHost = v
+	ownPort := "8080"
+	if v := os.Getenv("PORT"); v != "" {
+		ownPort = v
 	}
 
-	customerSvcHost := "localhost"
-	if v := os.Getenv("CUSTOMERSVC_HOST"); v != "" {
-		customerSvcHost = v
+	customerSvcHostPort := "localhost:8081"
+	if v := os.Getenv("CUSTOMERSVC_HOSTPORT"); v != "" {
+		customerSvcHostPort = v
 	}
 
-	greetSvcClient = pb.NewGreetServiceClient(dial(greetSvcHost + ":8081"))
-	customerSvcClient = pb.NewCustomerServiceClient(dial(customerSvcHost + ":8082"))
+	greetSvcHostPort := "localhost:8082"
+	if v := os.Getenv("GREETSVC_HOSTPORT"); v != "" {
+		greetSvcHostPort = v
+	}
+
+	customerSvcClient = pb.NewCustomerServiceClient(dial(customerSvcHostPort))
+	greetSvcClient = pb.NewGreetServiceClient(dial(greetSvcHostPort))
 
 	http.HandleFunc("/hello", sayHello)
-	if err := http.ListenAndServe(":8080", http.DefaultServeMux); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", ownPort), http.DefaultServeMux); err != nil {
 		log.Fatal(err)
 	}
 

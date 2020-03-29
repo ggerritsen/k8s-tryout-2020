@@ -17,8 +17,8 @@ services:
     working_dir: /go/app/api/
     environment:
       - PORT=8080
-      - GREETSVC_HOST=greetsvc
-      - CUSTOMERSVC_HOST=customersvc
+      - CUSTOMERSVC_HOSTPORT=customersvc:8081
+      - GREETSVC_HOSTPORT=greetsvc:8082
     ports:
       - "8080:8080"
 
