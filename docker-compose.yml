@@ -20,23 +20,23 @@ services:
       - GREETSVC_HOST=greetsvc
       - CUSTOMERSVC_HOST=customersvc
     ports:
-      - 8080:8080
+      - "8080:8080"
 
   customersvc:
     <<: *base
     working_dir: /go/app/customersvc/
     environment:
-      - PORT=8082
+      - PORT=8081
     ports:
-      - 8082:8082
+      - "8081:8081"
 
   greetsvc:
     <<: *base
     working_dir: /go/app/greetsvc/
     environment:
-      - PORT=8081
+      - PORT=8082
     ports:
-      - 8081:8081
+      - "8082:8082"
 
 networks:
   k8s-tryout_net:

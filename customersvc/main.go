@@ -14,7 +14,7 @@ import (
 func main() {
 	log.Print("Starting customerservice...")
 
-	l, err := net.Listen("tcp", ":8082")
+	l, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
