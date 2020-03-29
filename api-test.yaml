@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
   - name: api-container
-    image: ggerritsen1/k8s-tryout-2020-api:latest
+    image: ggerritsen1/k8s-tryout-2020_api:latest

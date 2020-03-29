@@ -1,9 +1,6 @@
 version: '3.7'
 
 x-base: &base
-  build:
-    context: ./
-    dockerfile: ./Dockerfile
   entrypoint: modd
   command: -f ../modd.conf
   networks:
@@ -14,7 +11,11 @@ x-base: &base
 services:
   api:
     <<: *base
-    working_dir: /go/app/api/
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        workdir: api
     environment:
       - PORT=8080
       - CUSTOMERSVC_HOSTPORT=customersvc:8081
@@ -24,7 +25,11 @@ services:
 
   customersvc:
     <<: *base
-    working_dir: /go/app/customersvc/
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        workdir: customersvc
     environment:
       - PORT=8081
     ports:
@@ -32,7 +37,11 @@ services:
 
   greetsvc:
     <<: *base
-    working_dir: /go/app/greetsvc/
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        workdir: greetsvc
     environment:
       - PORT=8082
     ports:

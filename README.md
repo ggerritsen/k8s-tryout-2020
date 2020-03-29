@@ -22,6 +22,11 @@ Check with:
 1. `kubectl cluster-info`
 
 #### How to deploy to k3s
+1. Make sure latest images have been built `docker-compose build`
+1. And have been tagged: `docker tag k8s-tryout-2020_api:latest ggerritsen1/k8s-tryout-2020_api:latest`
+1. And have been pushed: `docker push ggerritsen1/k8s-tryout-2020_api:latest`  
+
+Then:  
 1. `kubectl apply -f <yaml-file>`  
 Check with:
 - `kubectl get pods`

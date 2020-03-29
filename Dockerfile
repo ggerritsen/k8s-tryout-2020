@@ -11,3 +11,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
+
+ARG workdir
+WORKDIR ${workdir}
+ENTRYPOINT ["go", "run", "."]
