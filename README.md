@@ -17,9 +17,11 @@ Check with:
 - `docker exec -it <container> /bin/bash`
 
 #### How to start a k3s cluster
-1. `k3d create --api-port 6550 --publish 8081:80 --workers 3`
+1. `k3d create --api-port 6550 --publish 8090:80 --workers 3` # 80 is the ingress port that traefik listens on
 1. `export KUBECONFIG="$(k3d get-kubeconfig --name='k3s-default')"`
 1. `kubectl cluster-info`
+1. `kubectl get all -o wide`
+1. For login credentials, see `cat $KUBECONFIG`
 
 #### How to deploy to k3s
 1. Make sure latest images have been built `docker-compose build`
@@ -27,15 +29,22 @@ Check with:
 1. And have been pushed: `docker push ggerritsen1/k8s-tryout-2020_api:latest`  
 
 Then:  
-1. `kubectl apply -f <yaml-file>`  
+1. `kubectl apply -f api-deployment.yaml`  
 Check with:
-- `kubectl get pods`
-- `kubectl logs <pod-name>`
+- `kubectl get pods -o wide`
+- `kubectl logs -f -lapp=k8s-tryout-2020`
+
+1. Open http://api.localhost/hello to see that it works
+
+#### Troubleshoot
+1. run bash on a specific container `kubectl exec -it pod/k8s-tryout-2020-api-deployment-54d587f5bf-qqpwv -- /bin/bash`
+1. run bash on a helper container `kubectl --namespace=default run -it --image=alpine helper-container`, then `wget -SO- k8s-tryout-2020-api/hello`
 
 #### Next steps
 
 - Deploy to k3s
 - Make smaller containers (from scratch)
+- try https://k8slens.dev/
 
 
 ##### Sources
@@ -51,3 +60,7 @@ Check with:
 - https://sysadmins.co.za/develop-build-and-deploy-a-golang-app-to-k3s/
 - https://medium.com/google-cloud/kubernetes-101-pods-nodes-containers-and-clusters-c1509e409e16
 - https://medium.com/google-cloud/kubernetes-110-your-first-deployment-bf123c1d3f8
+- https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
+- https://github.com/rancher/k3d/issues/103
+- https://github.com/rancher/k3s/issues/350
+- https://rancher.com/docs/k3s/latest/en/installation/kube-dashboard/
