@@ -1,20 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8s-tryout-2020-api-deployment
+  name: k8s-tryout-2020-api-deployment-frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: k8s-tryout-2020
+      app: k8s-tryout-2020-frontend
   template:
     metadata:
       labels:
-        app: k8s-tryout-2020
+        app: k8s-tryout-2020-frontend
     spec:
       containers:
         - name: api-container
           image: ggerritsen1/k8s-tryout-2020_api:latest
+          env:
+          - name: CUSTOMERSVC_HOSTPORT
+            value: "customersvc:8081"
+          - name: GREETSVC_HOSTPORT
+            value: "greetsvc:8082"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-tryout-2020-api-deployment-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-tryout-2020-backend
+  template:
+    metadata:
+      labels:
+        app: k8s-tryout-2020-backend
+    spec:
+      containers:
         - name: customersvc-container
           image: ggerritsen1/k8s-tryout-2020_customersvc:latest
         - name: greetsvc-container
@@ -23,14 +44,38 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: k8s-tryout-2020-api
+  name: api
 spec:
   ports:
     - name: http
       targetPort: 8080
       port: 8080
   selector:
-    app: k8s-tryout-2020
+    app: k8s-tryout-2020-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customersvc
+spec:
+  ports:
+    - name: http
+      targetPort: 8081
+      port: 8081
+  selector:
+    app: k8s-tryout-2020-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greetsvc
+spec:
+  ports:
+    - name: http
+      targetPort: 8082
+      port: 8082
+  selector:
+    app: k8s-tryout-2020-backend
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -45,5 +90,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: k8s-tryout-2020-api
+              serviceName: api
               servicePort: http
