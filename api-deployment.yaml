@@ -15,6 +15,10 @@ spec:
       containers:
         - name: api-container
           image: ggerritsen1/k8s-tryout-2020_api:latest
+        - name: customersvc-container
+          image: ggerritsen1/k8s-tryout-2020_customersvc:latest
+        - name: greetsvc-container
+          image: ggerritsen1/k8s-tryout-2020_greetsvc:latest
 ---
 apiVersion: v1
 kind: Service
