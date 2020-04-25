@@ -24,7 +24,7 @@ Check with:
 1. For login credentials, see `cat $KUBECONFIG`
 
 #### How to deploy to k3s
-1. Make sure latest images have been built `docker-compose build`
+1. Make sure latest images have been built: `docker-compose build`
 1. And have been tagged: `docker tag k8s-tryout-2020_api:latest ggerritsen1/k8s-tryout-2020_api:latest`
 1. And have been pushed: `docker push ggerritsen1/k8s-tryout-2020_api:latest`  
 
@@ -32,19 +32,30 @@ Then:
 1. `kubectl apply -f api-deployment.yaml`  
 Check with:
 - `kubectl get pods -o wide`
-- `kubectl logs -f -lapp=k8s-tryout-2020`
+- `kubectl logs -f -lapp=k8s-tryout-2020 --all-containers=true --max-log-requests=10`
 
-1. Open http://api.localhost/hello to see that it works
+1. Open http://api.localhost:8090/hello to see that it works
 
 #### Troubleshoot
-1. run bash on a specific container `kubectl exec -it pod/k8s-tryout-2020-api-deployment-54d587f5bf-qqpwv -- /bin/bash`
-1. run bash on a helper container `kubectl --namespace=default run -it --image=alpine helper-container`, then `wget -SO- k8s-tryout-2020-api/hello`
+1. Run bash on a specific container `kubectl exec -it pod/k8s-tryout-2020-api-deployment-54d587f5bf-qqpwv -- /bin/bash`
+1. Run bash on a helper container `kubectl --namespace=default run -it --image=alpine helper-container`, then `wget -SO- k8s-tryout-2020-api/hello`
+1. See traefik dashboard:
+  - `kubectl -n kube-system edit configmap traefik`, then add: 
+  ```
+    [api]
+        dashboard = true 
+```
+  - `kubectl -n kube-system port-forward deployment/traefik 8080` and open http://localhost:8080
+
 
 #### Next steps
 
 - Deploy to k3s
 - Make smaller containers (from scratch)
-- try https://k8slens.dev/
+- Try https://k8slens.dev/
+- Add a database
+- Add integration with an external endpoint/system
+
 
 
 ##### Sources
