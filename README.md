@@ -17,6 +17,7 @@ Check with:
 - `docker exec -it <container> /bin/bash`
 
 #### How to start a k3s cluster
+1. `wget -q -O - https://raw.githubusercontent.com/rancher/k3d/master/install.sh | TAG=v1.7.0 bash` to install k3d
 1. `k3d create --api-port 6550 --publish 8090:80 --workers 3` # 80 is the ingress port that traefik listens on
 1. `export KUBECONFIG="$(k3d get-kubeconfig --name='k3s-default')"`
 1. `kubectl cluster-info`
@@ -32,7 +33,8 @@ Then:
 1. `kubectl apply -f api-deployment.yaml`  
 Check with:
 - `kubectl get pods -o wide`
-- `kubectl logs -f -lapp=k8s-tryout-2020 --all-containers=true --max-log-requests=10`
+- `kubectl logs -f -lapp=k8s-tryout-2020-frontend --all-containers=true --max-log-requests=10`
+- `kubectl logs -f -lapp=k8s-tryout-2020-backend --all-containers=true`
 
 1. Open http://api.localhost:8090/hello to see that it works
 
@@ -50,7 +52,6 @@ Check with:
 
 #### Next steps
 
-- Deploy to k3s
 - Make smaller containers (from scratch)
 - Try https://k8slens.dev/
 - Add a database
